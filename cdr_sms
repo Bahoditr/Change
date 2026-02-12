@@ -69,8 +69,8 @@ add constraint CDR_SMS_FILE_KEY primary key (FILE_ID);
 
 
 
-----Create table cdr_ims_tmp
-create table CDR_IMS_TMP
+----Create table cdr_sms_tmp
+create table CDR_SMS_TMP
 (
            
 	GENERATIONTIMESTAMP		VARCHAR2(100),
