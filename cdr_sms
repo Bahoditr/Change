@@ -44,8 +44,10 @@ INTERVAL (NUMTOYMINTERVAL(1, 'MONTH'))
         (
           partition FIRST_PART values less than (TO_DATE('2026-01-01 00:00:00', 'SYYYY-MM-DD HH24:MI:SS', 'NLS_CALENDAR=GREGORIAN'))
         );
-		
-		
+
+create index CDR_SMS_IDX1 on CDR_SMS (SESSIONSTARTTIME, MSISDN)     nologging  local TABLESPACE ICDR;		
+
+
 ----Create table cdr_sms_file
 create table CDR_SMS_FILE
 (
