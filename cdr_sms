@@ -67,7 +67,9 @@ create unique index CDR_SMS_FILE_IDX01 on CDR_SMS_FILE (FILE_NAME)
   tablespace IDXMED;
 
 alter table CDR_SMS_FILE
-add constraint CDR_SMS_FILE_KEY primary key (FILE_ID);
+add constraint CDR_SMS_FILE_KEY primary key (FILE_ID) 
+using index
+TABLESPACE ICDR;
 
 
 
