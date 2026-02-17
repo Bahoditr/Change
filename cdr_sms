@@ -117,3 +117,15 @@ create table CDR_SMS_TMP
 	file_id                 NUMBER
 )
 tablespace DATSML;
+
+
+----Create reference table 2
+create table dic_rate
+(
+  rate_id 		NUMBER(4) not null,
+  name          VARCHAR2(100)
+) tablespace DATSML ;
+
+alter table dic_rate
+  add constraint dic_rate_key
+  primary key (rate_id)  using index tablespace IDXSML;
