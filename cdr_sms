@@ -39,7 +39,7 @@
         file_id      	            NUMBER
         )
 tablespace DCDR
-partition by range (SESSIONSTARTTIME) 
+partition by range (SESSIONSTARTTIME) --GENERATIONTIMESTAMP
 INTERVAL (NUMTOYMINTERVAL(1, 'MONTH'))
         (
           partition FIRST_PART values less than (TO_DATE('2026-01-01 00:00:00', 'SYYYY-MM-DD HH24:MI:SS', 'NLS_CALENDAR=GREGORIAN'))
@@ -48,7 +48,7 @@ INTERVAL (NUMTOYMINTERVAL(1, 'MONTH'))
 create index CDR_SMS_IDX1 on CDR_SMS (SESSIONSTARTTIME, MSISDN)     nologging  local TABLESPACE ICDR;		
 
 
-----Create table cdr_sms_file
+
 create table CDR_SMS_FILE
 (
   file_id      NUMBER not null,
@@ -64,7 +64,7 @@ create table CDR_SMS_FILE
 tablespace DATMED;
 
 create unique index CDR_SMS_FILE_IDX01 on CDR_SMS_FILE (FILE_NAME)
-  tablespace IDXMED;
+tablespace IDXMED;
 
 alter table CDR_SMS_FILE
 add constraint CDR_SMS_FILE_KEY primary key (FILE_ID) 
@@ -73,7 +73,7 @@ TABLESPACE ICDR;
 
 
 
-----Create table cdr_sms_tmp
+
 create table CDR_SMS_TMP
 (
            
@@ -119,7 +119,173 @@ create table CDR_SMS_TMP
 tablespace DATSML;
 
 
-----Create reference table 2
+
+
+------------------VOICE---------
+
+----Create table cdr_ims
+create table CDR_IMS
+        (
+          generationtimestamp            DATE,
+          sessionid                      VARCHAR2(200),
+          servicecontext_id              NUMBER,
+          sessionstarttime               DATE,
+          callanswertime                 DATE,
+          callendtime                    DATE,
+          originhost_id                  NUMBER,
+          deviceid                       RAW(16),
+          roamingindicator_id            NUMBER,
+          totalroundedduration           NUMBER,
+          callduration                   NUMBER,
+          callingpartyaddress            NUMBER,
+          calledpartyaddress             NUMBER,
+          duration                       NUMBER,
+          serviceidentifier              NUMBER,
+          totaltimeconsumed              NUMBER,
+          subscriptionid                 RAW(16),
+          subscriptionstate_id           NUMBER,
+          accountid                      RAW(16),
+          subscriptionstartdatetime      DATE,
+          subscriptionenddatetime        DATE,
+          bucketbalancebefore            NUMBER,
+          bucketbalanceafter             NUMBER,
+          bucketcommitedunits            NUMBER,
+          bucketinfo_totaltimecharged    NUMBER,
+          bucketinfo_roundedtimecharged  NUMBER,
+          accountstate_id                NUMBER,
+          accountbalancebefore           NUMBER,
+          accountbalanceafter            NUMBER,
+          accountbalancecommitted        NUMBER,
+          accountinfo_totaltimecharged   NUMBER,
+          accountinfo_roundedtimecharged NUMBER,
+          deltatime                      NUMBER,
+          msisdn                         NUMBER,
+          imsi                           NUMBER,
+          calledcountry_id               NUMBER,
+          origincountry_id               NUMBER,
+          recordeventtype_id             NUMBER,
+          bundlename_id                  NUMBER,
+          bucketname_id                  NUMBER,
+          bucketunittype_id              NUMBER,
+          bucketkindofunit_id            NUMBER,
+          file_id                        NUMBER
+        )
+tablespace DCDR
+partition by range (SESSIONSTARTTIME) -- generationtimestamp
+INTERVAL (NUMTOYMINTERVAL(1, 'MONTH'))
+        (
+          partition FIRST_PART values less than (TO_DATE('2026-01-01 00:00:00', 'SYYYY-MM-DD HH24:MI:SS', 'NLS_CALENDAR=GREGORIAN'))
+        );
+
+create index CDR_IMS_IDX1 
+on cdr_ims (SESSIONSTARTTIME, MSISDN)     
+nologging  local TABLESPACE ICDR;
+
+
+
+
+create table CDR_IMS_FILE
+(
+  file_id      NUMBER not null,
+  file_name    VARCHAR2(100),
+  bdate        DATE,
+  file_date    DATE,
+  file_size    NUMBER,
+  rows_cnt     NUMBER,
+  sec_parse    NUMBER,
+  sec_load     NUMBER,
+  edate        DATE
+)
+tablespace DATMED
+
+create unique index CDR_IMS_FILE_IDX01 on CDR_IMS_FILE (FILE_NAME)
+tablespace IDXMED
+
+alter table CDR_IMS_FILE
+add constraint CDR_IMS_FILE_KEY primary key (FILE_ID)
+using index
+TABLESPACE ICDR;
+
+----
+create table CDR_IMS_TMP
+(
+  generationtimestamp            VARCHAR2(100),
+  sessionid                      VARCHAR2(200),
+  servicecontextid               VARCHAR2(100),
+  sessionstarttime               VARCHAR2(100),
+  callanswertime                 VARCHAR2(100),
+  callendtime                    VARCHAR2(100),
+  originhost                     VARCHAR2(100),
+  deviceid                       VARCHAR2(100),
+  roamingindicator               VARCHAR2(100),
+  calledcountryname              VARCHAR2(100),
+  origincountryname              VARCHAR2(100),
+  totalroundedduration           VARCHAR2(100),
+  callduration                   VARCHAR2(100),
+  callingpartyaddress            VARCHAR2(100),
+  calledpartyaddress             VARCHAR2(100),
+  duration                       VARCHAR2(100),
+  serviceidentifier              VARCHAR2(100),
+  subrecordeventtype             VARCHAR2(100),
+  totaltimeconsumed              VARCHAR2(100),
+  subscriptionid                 VARCHAR2(100),
+  subscriptionstate              VARCHAR2(100),
+  bundlename                     VARCHAR2(100),
+  accountid                      VARCHAR2(100),
+  subscriptionstartdatetime      VARCHAR2(100),
+  subscriptionenddatetime        VARCHAR2(100),
+  bucketname                     VARCHAR2(100),
+  bucketunittype                 VARCHAR2(100),
+  bucketkindofunit               VARCHAR2(100),
+  bucketbalancebefore            VARCHAR2(100),
+  bucketbalanceafter             VARCHAR2(100),
+  bucketcommitedunits            VARCHAR2(100),
+  bucketinfo_totaltimecharged    VARCHAR2(100),
+  bucketinfo_roundedtimecharged  VARCHAR2(100),
+  accountstate                   VARCHAR2(100),
+  accountbalancebefore           VARCHAR2(100),
+  accountbalanceafter            VARCHAR2(100),
+  accountbalancecommitted        VARCHAR2(100),
+  accountinfo_totaltimecharged   VARCHAR2(100),
+  accountinfo_roundedtimecharged VARCHAR2(100),
+  deltatime                      VARCHAR2(100),
+  subscriptionidtype_1           VARCHAR2(100),
+  subscriptioniddata_1           VARCHAR2(100),
+  subscriptionidtype_2           VARCHAR2(100),
+  subscriptioniddata_2           VARCHAR2(100),
+  file_id                        NUMBER
+)
+tablespace DATSML
+
+---------------------DICTIONARY----------
+
+----#1
+create table DIC_roamingindicator
+(
+  roamingindicator_id NUMBER(4) not null,
+  name                VARCHAR2(100)
+) tablespace DATSML ;
+
+alter table DIC_roamingindicator
+  add constraint DIC_roamingindicator_KEY
+  primary key (roamingindicator_id)  using index tablespace IDXSML;
+
+
+
+
+----#2
+create table DIC_COUNTRYNAME
+(
+  COUNTRYNAME_id NUMBER(4) not null,
+  name          VARCHAR2(100)
+) tablespace DATSML ;
+
+alter table DIC_COUNTRYNAME
+  add constraint DIC_COUNTRYNAME_KEY
+  primary key (COUNTRYNAME_id)  using index tablespace IDXSML;
+
+
+----#3
 create table dic_rate
 (
   rate_id 		NUMBER(4) not null,
@@ -129,3 +295,4 @@ create table dic_rate
 alter table dic_rate
   add constraint dic_rate_key
   primary key (rate_id)  using index tablespace IDXSML;
+
